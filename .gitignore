@@ -1,0 +1,9 @@
+pluginsdk
+bin
+bin64
+.vs
+*.filters
+*.user*
+*/obj/*
+*.db
+*.opendb
