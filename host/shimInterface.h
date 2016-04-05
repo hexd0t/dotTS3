@@ -13,6 +13,9 @@
 
 struct ShimInterface {
 	const char* (*name)(size_t pluginID);
+	const char* (*version)(size_t pluginID);
+	const char* (*author)(size_t pluginID);
+	const char* (*desc)(size_t pluginID);
 };
 
 #ifdef __cplusplus

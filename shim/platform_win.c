@@ -50,6 +50,8 @@ typedef void(__fastcall *host_load_plugin_func ) (const char* ts3dir, const char
 
 void init_host( struct ShimInterface** interf, size_t* pluginID )
 {
+	if( *interf != 0 ) //plugin already loaded
+		return;
 	if( HOSTLIB == 0 ) {
 		modify_path();
 		HOSTLIB = LoadLibraryA( "dotts3host01.dll" );

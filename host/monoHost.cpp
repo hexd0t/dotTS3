@@ -24,7 +24,7 @@ void init_mono_dirs( const char* ts3dir )
 #endif
 
 dotts3::host::mono_host::mono_host( const char* ts3dir ) {
-	printf("Initializing Mono");
+	printf("[.TS3 Host] Initializing Mono");
 
 #ifdef _WIN32
 	init_mono_dirs( ts3dir );
@@ -61,25 +61,46 @@ size_t dotts3::host::mono_host::load_plugin(const char* filename) {
 	if(mono_class_init( mainclass ) == false)
 		throw new std::runtime_error( "Unable to init plugin main class" );
 
+	MonoVTable* vtable = mono_class_vtable( m_plugin_domain, mainclass );
+	mono_runtime_class_init( vtable );
+
 	m_plugin_assemblies.push_back( assembly );
 	m_plugin_images.push_back( image );
 	m_plugin_mainclasses.push_back( mainclass );
+	m_plugin_mainclass_vts.push_back( vtable );
 
 	return m_plugin_assemblies.size() - 1;
 }
 
 const char* dotts3::host::mono_host::plugin_name(size_t plugin_id)
 {
+	return extract_static_string( plugin_id, "DisplayName" );//Deliberately not freed, but cached in the shim for the remaining runtime
+}
+
+const char* dotts3::host::mono_host::plugin_version(size_t plugin_id)
+{
+	return extract_static_string( plugin_id, "Version" );//Deliberately not freed, but cached in the shim for the remaining runtime
+}
+
+const char* dotts3::host::mono_host::plugin_author(size_t plugin_id)
+{
+	return extract_static_string( plugin_id, "Author" );//Deliberately not freed, but cached in the shim for the remaining runtime
+}
+
+const char* dotts3::host::mono_host::plugin_desc(size_t plugin_id)
+{
+	return extract_static_string( plugin_id, "Description" );//Deliberately not freed, but cached in the shim for the remaining runtime
+}
+
+const char* dotts3::host::mono_host::extract_static_string(size_t plugin_id, const char* field_name)
+{
 	MonoError err;
 	MonoString* managed_string;
 
-	MonoVTable* vtable = mono_class_vtable( m_plugin_domain, m_plugin_mainclasses[plugin_id] );
-	mono_runtime_class_init( vtable );
-	MonoClassField* field = mono_class_get_field_from_name( m_plugin_mainclasses[plugin_id], "DisplayName");
-	
-	mono_field_static_get_value( vtable, field, &managed_string );
-	
-	auto result = mono_string_to_utf8_checked(managed_string, &err); //Deliberately not freed, but cached in the shim for the remaining runtime
+	MonoClassField* field = mono_class_get_field_from_name( m_plugin_mainclasses[plugin_id], field_name );
+	mono_field_static_get_value( m_plugin_mainclass_vts[plugin_id], field, &managed_string );
+
+	auto result = mono_string_to_utf8_checked( managed_string, &err );
 	if( mono_error_ok( &err ) )
 		return result;
 	return ".TS3 error!";

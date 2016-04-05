@@ -8,7 +8,7 @@ const char* ts3plugin_name()
 
 const char* ts3plugin_version()
 {
-	return "-";
+	return dotplugin_version();
 }
 
 int ts3plugin_apiVersion()
@@ -18,12 +18,12 @@ int ts3plugin_apiVersion()
 
 const char* ts3plugin_author()
 {
-	return "-";
+	return dotplugin_author();
 }
 
 const char* ts3plugin_description()
 {
-	return "dotTS3";
+	return dotplugin_description();
 }
 
 void ts3plugin_setFunctionPointers(const struct TS3Functions funcs)

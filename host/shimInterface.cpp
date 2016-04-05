@@ -14,11 +14,23 @@ const char* plugin_name( size_t pluginID )
 	return MONOHOST->plugin_name( pluginID );
 }
 
-ShimInterface SHIMINTER = {&plugin_name};
+const char* plugin_version( size_t pluginID ) {
+	return MONOHOST->plugin_version( pluginID );
+}
+
+const char* plugin_author( size_t pluginID ) {
+	return MONOHOST->plugin_author( pluginID );
+}
+
+const char* plugin_desc( size_t pluginID ) {
+	return MONOHOST->plugin_desc( pluginID );
+}
+
+ShimInterface SHIMINTER = {&plugin_name, &plugin_version, &plugin_author, &plugin_desc};
 
 void __fastcall host_load_plugin( const char* ts3dir, const char* dllName, ShimInterface** interf, size_t* pluginID)
 {
-#ifdef _WIN32 && DEBUG
+#if defined(_WIN32) && defined(_DEBUG)
 	MessageBoxA( 0,dllName,"Attach debugger",0 );
 #endif
 	try {
@@ -26,11 +38,12 @@ void __fastcall host_load_plugin( const char* ts3dir, const char* dllName, ShimI
 			MONOHOST = new dotts3::host::mono_host( ts3dir );
 		}
 		*pluginID = MONOHOST->load_plugin( dllName );
+		printf( "[.TS3 Host] Plugin loaded as id %lu '%s'\n", static_cast<unsigned long>(*pluginID), dllName );
 		*interf = &SHIMINTER;
 	}
 	catch(std::exception& ex )
 	{
-		printf( ".TS3 Host load plugin exception:\n%s", ex.what() );
+		printf( "[.TS3 Host] Load plugin exception:\n%s\n", ex.what() );
 #ifdef _WIN32
 		MessageBoxA( 0, ex.what(), ".TS3 Host load plugin exception", 0 );
 #endif
