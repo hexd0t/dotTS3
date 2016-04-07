@@ -26,7 +26,11 @@ const char* plugin_desc( size_t pluginID ) {
 	return MONOHOST->plugin_desc( pluginID );
 }
 
-ShimInterface SHIMINTER = {&plugin_name, &plugin_version, &plugin_author, &plugin_desc};
+#include "shimInterface.gen.h"
+
+ShimInterface SHIMINTER = { &plugin_name, &plugin_version, &plugin_author, &plugin_desc
+#include "shimInterface.genstruct.txt"
+};
 
 void __fastcall host_load_plugin( const char* ts3dir, const char* dllName, ShimInterface** interf, size_t* pluginID)
 {

@@ -11,8 +11,8 @@ namespace codegen.OSDK
     {
         public string Name { get; private set; }
         public string RetType { get; private set; }
-        private List<string> _parameters;
-        public IReadOnlyList<string> Parameters { get { return _parameters; } }
+        private List<Tuple<string, string>> _parameters;
+        public IReadOnlyList<Tuple<string, string>> Parameters { get { return _parameters; } }
 
         public bool Valid { get; private set; }
         public PluginExport(string line)
@@ -24,9 +24,21 @@ namespace codegen.OSDK
                 return;
             RetType = match.Groups[1].Value;
             Name = match.Groups[2].Value;
-            _parameters = new List<string>();
+            _parameters = new List<Tuple<string, string>>();
             for (int i = 3; i < match.Groups.Count; i++)
-                _parameters.Add(match.Groups[i].Value);
+            {
+                string param = match.Groups[i].Value;
+                if(string.IsNullOrWhiteSpace(param))
+                    continue;
+                int namepos = param.LastIndexOf(' ');
+                if (namepos < 0)
+                    namepos = param.Length;
+                _parameters.Add(new Tuple<string, string>(
+                    param.Substring(0, namepos)
+                        .Replace("uint64", "uint64_t")
+                        .Replace("anyID", "uint16_t"),
+                    namepos < param.Length ? param.Substring(namepos + 1) : ""));
+            }
         }
     }
 }

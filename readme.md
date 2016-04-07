@@ -27,7 +27,7 @@ Windows:
 	Install Mono libraries, use the installer msi from http://download.mono-project.com/archive/ - choose at least v4.4.0.
 	If you plan to distribute 32 and 64 bit binaries, you'll need both mono versions.
 	To reduce headaches, choose a version built with the same MSVC runtime library as TS3 - as of writing v120 / VS2013.
-	You will also need the corresponding Toolchain (e.g. install VS2013 for MSVCR120) - you can still use more recent VS versions.
+	You will also need the corresponding toolchain (e.g. install VS2013 for MSVCR120) - you can still use more recent VS versions.
 	
 Linux:
-	TBD - get a workinging state on Windows first
+	TBD - get a working state on Windows first

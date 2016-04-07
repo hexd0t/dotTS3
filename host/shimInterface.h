@@ -1,5 +1,5 @@
 #pragma once
-#include <stdint.h>
+#include <cstdint>
 
 #ifdef _WIN32
 #ifdef dotTS3HOST
@@ -16,6 +16,7 @@ struct ShimInterface {
 	const char* (*version)(size_t pluginID);
 	const char* (*author)(size_t pluginID);
 	const char* (*desc)(size_t pluginID);
+#include "shimInterface.gen.h"
 };
 
 #ifdef __cplusplus

@@ -17,3 +17,6 @@ PLUGINS_EXPORTDLL const char* ts3plugin_description();
 PLUGINS_EXPORTDLL void ts3plugin_setFunctionPointers( const struct TS3Functions funcs );
 PLUGINS_EXPORTDLL int ts3plugin_init();
 PLUGINS_EXPORTDLL void ts3plugin_shutdown();
+
+//Include codegen file
+#include "ts3plugin.gen.h"
