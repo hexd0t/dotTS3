@@ -3,7 +3,6 @@
 #ifdef _WIN32
 #pragma comment(lib, "monosgen-2.0.lib")
 #endif
-#include <mono/metadata/image.h>
 
 //forward declate MonoStructs, so we don't need to expose Mono Headers
 struct _MonoDomain;
@@ -14,7 +13,11 @@ struct _MonoClass;
 typedef struct _MonoClass MonoClass;
 struct MonoVTable;
 typedef struct MonoVTable MonoVTable;
+struct _MonoImage;
+typedef struct _MonoImage MonoImage;
+
 #include <vector>
+#include <stddef.h>
 
 /* Manages the embedded mono engine */
 /* Create only a single, global AppDomain,

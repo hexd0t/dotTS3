@@ -1,5 +1,6 @@
 #pragma once
-#include <cstdint>
+#include <stdint.h>
+#include <stddef.h>
 
 #ifdef _WIN32
 #ifdef dotTS3HOST
@@ -22,7 +23,7 @@ struct ShimInterface {
 #ifdef __cplusplus
 extern "C" {
 #endif
-	EXPORTDLL void __fastcall host_load_plugin( const char* ts3dir, const char* pluginName, struct ShimInterface** interf, size_t* pluginID );
+	EXPORTDLL void host_load_plugin( const char* ts3dir, const char* pluginName, struct ShimInterface** interf, size_t* pluginID );
 #ifdef __cplusplus
 }
 #endif

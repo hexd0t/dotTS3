@@ -1,6 +1,7 @@
 #define dotTS3HOST
 #include "shimInterface.h"
 #include "monoHost.h"
+#include <stdio.h>
 
 #ifdef _WIN32
 #define WIN32_LEAN_AND_MEAN
@@ -26,13 +27,13 @@ const char* plugin_desc( size_t pluginID ) {
 	return MONOHOST->plugin_desc( pluginID );
 }
 
-#include "shimInterface.gen.h"
+#include "shimInterface.gen.cpp"
 
 ShimInterface SHIMINTER = { &plugin_name, &plugin_version, &plugin_author, &plugin_desc
 #include "shimInterface.genstruct.txt"
 };
 
-void __fastcall host_load_plugin( const char* ts3dir, const char* dllName, ShimInterface** interf, size_t* pluginID)
+void host_load_plugin( const char* ts3dir, const char* dllName, ShimInterface** interf, size_t* pluginID)
 {
 #if defined(_WIN32) && defined(_DEBUG)
 	MessageBoxA( 0,dllName,"Attach debugger",0 );

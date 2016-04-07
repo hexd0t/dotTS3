@@ -7,6 +7,7 @@
 #include <mono/jit/jit.h>
 #include <mono/metadata/assembly.h>
 #include <stdexcept>
+#include <string.h>
 
 #ifdef _WIN32
 void init_mono_dirs( const char* ts3dir )
