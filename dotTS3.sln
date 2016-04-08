@@ -13,6 +13,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "codegen", "codegen\codegen.
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "doc", "doc", "{9980A909-72DB-4A92-8DF1-F17E8ED4A0DB}"
 	ProjectSection(SolutionItems) = preProject
+		doc\Design.md = doc\Design.md
 		doc\Overview.svg = doc\Overview.svg
 		doc\Overview.vsdx = doc\Overview.vsdx
 	EndProjectSection

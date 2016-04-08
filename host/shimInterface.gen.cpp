@@ -1,6 +1,6 @@
 ﻿// Do not edit this directly; if there are changes needed, edit the codegen and regenerate
 // Do not compile this directly, it's only meant to be included in shimInterface.cpp
-int plugin_offersConfigure(size_td hostPluginID)
+int plugin_offersConfigure(size_t hostPluginID)
 {
 	return MONOHOST->plugin_offersConfigure( hostPluginID );
 }

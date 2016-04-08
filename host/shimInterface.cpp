@@ -43,7 +43,7 @@ void host_load_plugin( const char* ts3dir, const char* dllName, ShimInterface** 
 			MONOHOST = new dotts3::host::mono_host( ts3dir );
 		}
 		*pluginID = MONOHOST->load_plugin( dllName );
-		printf( "[.TS3 Host] Plugin loaded as id %lu '%s'\n", static_cast<unsigned long>(*pluginID), dllName );
+		printf( "[.TS3 Host] Plugin loaded as id %llu '%s'\n", static_cast<unsigned long long>(*pluginID), dllName );
 		*interf = &SHIMINTER;
 	}
 	catch(std::exception& ex )

@@ -18,6 +18,7 @@ typedef struct _MonoImage MonoImage;
 
 #include <vector>
 #include <stddef.h>
+#include <stdint.h>
 
 /* Manages the embedded mono engine */
 /* Create only a single, global AppDomain,
@@ -47,6 +48,8 @@ namespace dotts3 {
 			const char* plugin_version( size_t plugin_id );
 			const char* plugin_author( size_t plugin_id );
 			const char* plugin_desc( size_t plugin_id );
+
+#include "monoHost.gen.h"
 
 		private:
 			const char* extract_static_string( size_t plugin_id, const char* field_name );

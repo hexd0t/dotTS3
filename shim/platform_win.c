@@ -10,7 +10,8 @@ typedef uint16_t wchar_t; //MSVC does not provide wchar_t when compiling C (with
 
 struct {
 	wchar_t TSDIR[1024]; //wide char string, Path to TS3 Install directory + trailing slash
-	//Using wide chars to support non-latin chars in TS3 install directories
+	//Using wide chars to support non-latin chars in TS3 install directories,
+	//Not using UTF8 since it will be fed back to WinApis mostly, and they would require converting back to wchar again
 	char NAME[128]; //UTF8
 } SHIMFILE;
 
@@ -54,7 +55,7 @@ void init_host( struct ShimInterface** interf, size_t* pluginID )
 		return;
 	if( HOSTLIB == 0 ) {
 		modify_path();
-		HOSTLIB = LoadLibraryA( "dotts3host01.dll" );
+		HOSTLIB = LoadLibraryA( "dotts3host.dll" );
 	}
 	char tsdir_utf[2048];
 	WideCharToMultiByte( CP_UTF8, 0, SHIMFILE.TSDIR, -1, tsdir_utf, 2048, 0, 0 );//Give Mono the TS3 dir as UTF8

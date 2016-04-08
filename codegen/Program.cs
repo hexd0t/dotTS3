@@ -19,9 +19,11 @@ namespace codegen
         {
             var osdk = new OfficialSDK();
             Console.WriteLine("Generating shim ts3plugin interface");
-            Generator.shim(osdk);
+            Generator.Shim(osdk);
             Console.WriteLine("Generating host shim interface");
-            Generator.hostShimIF(osdk);
+            Generator.HostShimIF(osdk);
+            Console.WriteLine("Generating host mono wrapper");
+            Generator.HostMono(osdk);
         }
     }
 }

@@ -9,7 +9,7 @@ namespace codegen
 {
     static class Generator
     {
-        public static void shim(OfficialSDK osdk)
+        public static void Shim(OfficialSDK osdk)
         {
             using (var sourcef = File.Open("shim/ts3plugin.gen.c", FileMode.Create))
             using (var headerf = File.Open("shim/ts3plugin.gen.h", FileMode.Create))
@@ -47,7 +47,7 @@ namespace codegen
                 }
             }
         }
-        public static void hostShimIF(OfficialSDK osdk)
+        public static void HostShimIF(OfficialSDK osdk)
         {
             using (var sourcef = File.Open("host/shimInterface.gen.cpp", FileMode.Create))
             using (var headerf = File.Open("host/shimInterface.gen.h", FileMode.Create))
@@ -89,6 +89,40 @@ namespace codegen
 
                     structinit.Write(", &plugin_");
                     structinit.Write(reducedName);
+                }
+            }
+        }
+        public static void HostMono(OfficialSDK osdk)
+        {
+            using (var sourcef = File.Open("host/monoHost.gen.cpp", FileMode.Create))
+            using (var headerf = File.Open("host/monoHost.gen.h", FileMode.Create))
+            using (var source = new StreamWriter(sourcef, Encoding.UTF8))
+            using (var header = new StreamWriter(headerf, Encoding.UTF8))
+            {
+                var pluginIDparamFull = new[] { "size_t hostPluginID" };
+                header.Write("// Do not edit this directly; if there are changes needed, edit the codegen and regenerate\n");
+                source.Write("// Do not edit this directly; if there are changes needed, edit the codegen and regenerate\n");
+                source.Write("// Do not compile this directly, it's only meant to be included in monoHost.cpp\n");
+                foreach (var export in
+                    osdk.PluginExports.Where(export => !Program.SpecialExports.Contains(export.Name)))
+                {
+                    var funcName = export.Name.Replace("ts3plugin_", "plugin_");
+                    header.Write(export.RetType);
+                    header.Write(" ");
+                    header.Write(funcName);
+                    header.Write("(");
+                    header.Write(string.Join(", ", pluginIDparamFull.Concat(export.Parameters.Select(tuple => tuple.Item1 + " " + tuple.Item2))));
+                    header.Write(");\n");
+
+                    source.Write(export.RetType);
+                    source.Write(" dotts3::host::mono_host::");
+                    source.Write(funcName);
+                    source.Write("(");
+                    source.Write(string.Join(", ", pluginIDparamFull.Concat(export.Parameters.Select(tuple => tuple.Item1 + " " + tuple.Item2))));
+                    source.Write(")\n{\n\t");
+                    if (export.RetType != "void")
+                        source.Write("return 0;");
+                    source.Write("\n}\n");
                 }
             }
         }

@@ -106,3 +106,5 @@ const char* dotts3::host::mono_host::extract_static_string(size_t plugin_id, con
 		return result;
 	return ".TS3 error!";
 }
+
+#include "monoHost.gen.cpp"

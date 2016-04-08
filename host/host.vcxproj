@@ -78,7 +78,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
     <OutDir>$(SolutionDir)bin64\dotTS3\</OutDir>
-    <TargetName>dotts3host01</TargetName>
+    <TargetName>dotts3host</TargetName>
     <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);C:\Program Files\Mono\include\mono-2.0</IncludePath>
     <LibraryPath>C:\Program Files\Mono\lib;$(LibraryPath)</LibraryPath>
     <IntDir>obj\$(Platform)\$(Configuration)\</IntDir>
@@ -86,13 +86,13 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
     <OutDir>$(SolutionDir)bin\dotTS3\</OutDir>
-    <TargetName>dotts3host01</TargetName>
+    <TargetName>dotts3host</TargetName>
     <IntDir>obj\$(Platform)\$(Configuration)\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
     <OutDir>$(SolutionDir)bin64\dotTS3\</OutDir>
-    <TargetName>dotts3host01</TargetName>
+    <TargetName>dotts3host</TargetName>
     <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);C:\Program Files\Mono\include\mono-2.0</IncludePath>
     <LibraryPath>C:\Program Files\Mono\lib;$(LibraryPath)</LibraryPath>
     <IntDir>obj\$(Platform)\$(Configuration)\</IntDir>
@@ -159,6 +159,12 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="monoHost.cpp" />
+    <ClCompile Include="monoHost.gen.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </ClCompile>
     <ClCompile Include="shimInterface.cpp" />
     <ClCompile Include="shimInterface.gen.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
@@ -168,6 +174,7 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="monoHost.gen.h" />
     <ClInclude Include="monoHost.h" />
     <ClInclude Include="shimInterface.gen.h" />
     <ClInclude Include="shimInterface.h" />
