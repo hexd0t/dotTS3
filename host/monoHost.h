@@ -3,6 +3,7 @@
 #ifdef _WIN32
 #pragma comment(lib, "monosgen-2.0.lib")
 #endif
+#include <map>
 
 //forward declate MonoStructs, so we don't need to expose Mono Headers
 struct _MonoDomain;
@@ -30,12 +31,18 @@ namespace dotts3 {
 	namespace host {
 		class mono_host{
 		private:
+			struct plugininfo
+			{
+				MonoAssembly* assembly;
+				MonoImage* image;
+				MonoClass* main_class;
+				MonoVTable* main_class_vtable;
+				MonoObject* main_instance;
+				uint32_t main_instance_gchandle; //Keeping this stops the GC from freeing the plugin
+			};
 			MonoDomain* m_plugin_domain;
-			std::vector<MonoAssembly*> m_plugin_assemblies;
-			std::vector<MonoImage*> m_plugin_images;
-			std::vector<MonoClass*> m_plugin_mainclasses;
-			std::vector<MonoVTable*> m_plugin_mainclass_vts;
-			std::vector<MonoObject*> m_plugin_main_instances;
+			std::map<std::string, size_t> m_plugin_ids;
+			std::vector<plugininfo> m_plugins;
 			char* m_ts3dir;
 			char* m_dotts3dir;
 
