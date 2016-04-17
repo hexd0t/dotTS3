@@ -1,6 +1,7 @@
 #include "ts3plugin.h"
 #include "../host/shimInterface.h"
 #include "platform.h"
+#include "peinfo.h"
 #include <stdint.h>
 
 struct ShimInterface* pluginHost;
@@ -16,14 +17,9 @@ const char* ts3plugin_name()
 	return name_cache;
 }
 
-const char* version_cache;
 const char* ts3plugin_version()
 {
-	if( version_cache == 0 ) {
-		init_host( &pluginHost, &hostPluginID );
-		version_cache = pluginHost->version( hostPluginID );
-	}
-	return version_cache;
+	return get_plugin_version();
 }
 
 int ts3plugin_apiVersion()
@@ -41,14 +37,9 @@ const char* ts3plugin_author()
 	return author_cache;
 }
 
-const char* description_cache;
 const char* ts3plugin_description()
 {
-	if( description_cache == 0 ) {
-		init_host( &pluginHost, &hostPluginID );
-		description_cache = pluginHost->desc( hostPluginID );
-	}
-	return description_cache;
+	return get_plugin_desc();
 }
 
 void ts3plugin_setFunctionPointers(const struct TS3Functions funcs)

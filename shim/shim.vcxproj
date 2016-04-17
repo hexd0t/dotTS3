@@ -156,11 +156,13 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="peinfo.h" />
     <ClInclude Include="platform.h" />
     <ClInclude Include="ts3plugin.gen.h" />
     <ClInclude Include="ts3plugin.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="peinfo.c" />
     <ClCompile Include="platform_win.c" />
     <ClCompile Include="ts3plugin.c" />
     <ClCompile Include="ts3plugin.gen.c">
