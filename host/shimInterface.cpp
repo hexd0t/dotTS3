@@ -27,9 +27,13 @@ const char* plugin_desc( size_t pluginID ) {
 	return MONOHOST->plugin_desc( pluginID );
 }
 
+int plugin_init( size_t pluginID) {
+	return MONOHOST->plugin_init( pluginID );
+}
+
 #include "shimInterface.gen.cpp"
 
-ShimInterface SHIMINTER = { &plugin_name, &plugin_version, &plugin_author, &plugin_desc
+ShimInterface SHIMINTER = { &plugin_name, &plugin_version, &plugin_author, &plugin_desc, &plugin_init
 #include "shimInterface.genstruct.txt"
 };
 

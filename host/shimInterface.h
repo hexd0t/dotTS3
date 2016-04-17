@@ -4,12 +4,12 @@
 
 #ifdef _WIN32
 #ifdef dotTS3HOST
-#define EXPORTDLL __declspec(dllexport)
+#define MONOHOST_EXPORTDLL __declspec(dllexport)
 #else
-#define EXPORTDLL __declspec(dllimport)
+#define MONOHOST_EXPORTDLL __declspec(dllimport)
 #endif
 #else
-#define EXPORTDLL __attribute__ ((visibility("default")))
+#define MONOHOST_EXPORTDLL __attribute__ ((visibility("default")))
 #endif
 
 struct ShimInterface {
@@ -17,14 +17,17 @@ struct ShimInterface {
 	const char* (*version)(size_t pluginID);
 	const char* (*author)(size_t pluginID);
 	const char* (*desc)(size_t pluginID);
+	int (*init)(size_t pluginID);
 #include "shimInterface.gen.h"
 };
 
 #ifdef __cplusplus
 extern "C" {
 #endif
-	EXPORTDLL void host_load_plugin( const char* ts3dir, const char* pluginName, struct ShimInterface** interf, size_t* pluginID );
+	MONOHOST_EXPORTDLL void host_load_plugin( const char* ts3dir, const char* pluginName, struct ShimInterface** interf, size_t* pluginID );
 #ifdef __cplusplus
 }
 #endif
+
+#undef MONOHOST_EXPORTDLL
 

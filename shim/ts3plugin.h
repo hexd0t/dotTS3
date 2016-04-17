@@ -21,3 +21,5 @@ PLUGINS_EXPORTDLL void ts3plugin_shutdown();
 
 //Include codegen file
 #include "ts3plugin.gen.h"
+
+#undef PLUGINS_EXPORTDLL

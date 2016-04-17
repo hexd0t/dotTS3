@@ -11,11 +11,31 @@ typedef uint16_t wchar_t; //MSVC does not provide wchar_t when compiling C (with
 struct {
 	wchar_t TSDIR[1024]; //wide char string, Path to TS3 Install directory + trailing slash
 	//Using wide chars to support non-latin chars in TS3 install directories,
-	//Not using UTF8 since it will be fed back to WinApis mostly, and they would require converting back to wchar again
+	//Not using UTF8 since it will be fed back to WinApis mostly,
+	//and they would require converting back to wchar again
+	char TSDIR_U8[2048]; //tsdir in UTF8
 	char NAME[128]; //UTF8
 } SHIMFILE;
 
 HMODULE HOSTLIB;
+
+void get_filename()
+{
+	if( SHIMFILE.NAME[0] == 0 ) {
+		HMODULE module = 0;
+		GetModuleHandleExW( GET_MODULE_HANDLE_EX_FLAG_FROM_ADDRESS | GET_MODULE_HANDLE_EX_FLAG_UNCHANGED_REFCOUNT,
+			&shim_name, &module );
+		GetModuleFileNameW( module, SHIMFILE.TSDIR, 1024 );
+		wchar_t* filename = wcsrchr( SHIMFILE.TSDIR, L'\\' );
+		*filename = 0; //Cut filename from path string
+		++filename;
+		WideCharToMultiByte( CP_UTF8, 0, filename, -1, SHIMFILE.NAME, 128, 0, 0 );
+		wchar_t* plugindir = wcsrchr( SHIMFILE.TSDIR, L'\\' );
+		++plugindir;
+		*plugindir = 0;//Cut plugindir from path string
+		WideCharToMultiByte( CP_UTF8, 0, SHIMFILE.TSDIR, -1, SHIMFILE.TSDIR_U8, 2048, 0, 0 );
+	}
+}
 
 //adds dotTS3 to the Path environment var for the current TS3 instance, so we don't need to pollute the TS3 directory itself with too many dlls
 void modify_path()
@@ -32,7 +52,7 @@ void modify_path()
 	}
 	if( wcsstr(curPath, L"dotTS3") == 0 ) //Path was not adjusted yet
 	{
-		shim_name(); //Sets SHIMFILE.TSDIR
+		get_filename();
 		wchar_t* newPath = malloc( sizeof( wchar_t ) *
 			(5 + wcslen( curPath ) + 1 + wcslen( SHIMFILE.TSDIR ) + 6 + 1) ); // length of "Path=" + TS3 Path + "dotTS3" + ';' + current Path + '\0'
 		wcscpy( newPath, L"Path=" );
@@ -57,28 +77,20 @@ void init_host( struct ShimInterface** interf, size_t* pluginID )
 		modify_path();
 		HOSTLIB = LoadLibraryA( "dotts3host.dll" );
 	}
-	char tsdir_utf[2048];
-	WideCharToMultiByte( CP_UTF8, 0, SHIMFILE.TSDIR, -1, tsdir_utf, 2048, 0, 0 );//Give Mono the TS3 dir as UTF8
 	FARPROC loadproc = GetProcAddress( HOSTLIB, "host_load_plugin" );
-	((host_load_plugin_func)loadproc)(tsdir_utf, shim_name(), interf, pluginID);
+	//get_filename(); - Has been called in modify_path already
+	((host_load_plugin_func)loadproc)(SHIMFILE.TSDIR_U8, shim_name(), interf, pluginID);
 }
 
 const char* shim_name()
 {
-	if( SHIMFILE.NAME[0] == 0 ) {
-		HMODULE module = 0;
-		GetModuleHandleExW( GET_MODULE_HANDLE_EX_FLAG_FROM_ADDRESS | GET_MODULE_HANDLE_EX_FLAG_UNCHANGED_REFCOUNT,
-			&shim_name, &module );
-		GetModuleFileNameW( module, SHIMFILE.TSDIR, 1024 );
-		wchar_t* filename = wcsrchr( SHIMFILE.TSDIR, L'\\' );
-		*filename = 0; //Cut filename from path string
-		++filename;
-		WideCharToMultiByte( CP_UTF8, 0, filename, -1, SHIMFILE.NAME, 128, 0, 0 );
-		wchar_t* plugindir = wcsrchr( SHIMFILE.TSDIR, L'\\' );
-		++plugindir;
-		*plugindir = 0;//Cut plugindir from path string
-	}
+	get_filename();
 	return SHIMFILE.NAME;
 }
 
+const char* ts3_dir()
+{
+	get_filename();
+	return SHIMFILE.TSDIR_U8;
+}
 #endif

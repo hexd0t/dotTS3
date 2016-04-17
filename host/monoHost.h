@@ -15,6 +15,8 @@ struct MonoVTable;
 typedef struct MonoVTable MonoVTable;
 struct _MonoImage;
 typedef struct _MonoImage MonoImage;
+struct _MonoObject;
+typedef struct _MonoObject MonoObject;
 
 #include <vector>
 #include <stddef.h>
@@ -33,6 +35,7 @@ namespace dotts3 {
 			std::vector<MonoImage*> m_plugin_images;
 			std::vector<MonoClass*> m_plugin_mainclasses;
 			std::vector<MonoVTable*> m_plugin_mainclass_vts;
+			std::vector<MonoObject*> m_plugin_main_instances;
 			char* m_ts3dir;
 			char* m_dotts3dir;
 
@@ -48,6 +51,7 @@ namespace dotts3 {
 			const char* plugin_version( size_t plugin_id );
 			const char* plugin_author( size_t plugin_id );
 			const char* plugin_desc( size_t plugin_id );
+			int plugin_init( size_t plugin_id );
 
 #include "monoHost.gen.h"
 

@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace dotTS3
+namespace DotTS3
 {
 	public class Plugin : IDisposable
 	{

@@ -4,7 +4,7 @@
 #include <stdint.h>
 
 struct ShimInterface* pluginHost;
-size_t hostPluginID;
+size_t hostPluginID = -1;
 
 const char* name_cache;
 const char* ts3plugin_name()
@@ -53,15 +53,17 @@ const char* ts3plugin_description()
 
 void ts3plugin_setFunctionPointers(const struct TS3Functions funcs)
 {
+	init_host( &pluginHost, &hostPluginID );
 }
 
 int ts3plugin_init()
-{
-	return 0;
+{//This will only be called after setFunctionPointers, so we can stop calling init_host from here on - it must have been called before
+	return pluginHost->init( hostPluginID );
 }
 
 void ts3plugin_shutdown()
 {
+
 }
 
 //Include codegen file

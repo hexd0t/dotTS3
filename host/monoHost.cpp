@@ -58,7 +58,7 @@ size_t dotts3::host::mono_host::load_plugin(const char* filename) {
 
 	MonoImage* image = mono_assembly_get_image( assembly );
 
-	MonoClass* mainclass = mono_class_from_name( image, "dotTS3", "Plugin" );
+	MonoClass* mainclass = mono_class_from_name( image, "DotTS3", "Plugin" );
 	if(mono_class_init( mainclass ) == false)
 		throw new std::runtime_error( "Unable to init plugin main class" );
 
@@ -93,6 +93,13 @@ const char* dotts3::host::mono_host::plugin_desc(size_t plugin_id)
 	return extract_static_string( plugin_id, "Description" );//Deliberately not freed, but cached in the shim for the remaining runtime
 }
 
+int dotts3::host::mono_host::plugin_init(size_t plugin_id)
+{
+	MonoObject* instance = mono_object_new( m_plugin_domain, m_plugin_mainclasses[plugin_id] );
+	mono_runtime_object_init( instance );
+	return 0;//ToDo: capture exception, return 1 on fail
+}
+
 const char* dotts3::host::mono_host::extract_static_string(size_t plugin_id, const char* field_name)
 {
 	MonoError err;
@@ -106,5 +113,4 @@ const char* dotts3::host::mono_host::extract_static_string(size_t plugin_id, con
 		return result;
 	return ".TS3 error!";
 }
-
 #include "monoHost.gen.cpp"
